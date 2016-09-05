@@ -2,4 +2,12 @@
     <string name="app_name">Story Album</string>
     <string name="title_activity_main">스토리</string>
     <string name="search_query_hint">검색어를 입력해 주세요</string>
+
+    <string name="title_activity_new_story">스토리 생성</string>
+
+    <string name="action_confirm">완료</string>
+    <string name="action_add">+ 추가</string>
+    <string name="new_story_number_of_images">%d장의 사진</string>
+    <string name="new_story_hint_title">제목을 입력해주세요</string>
+    <string name="new_story_hint_memo">메모를 입력해주세요</string>
 </resources>
