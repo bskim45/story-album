@@ -10,4 +10,6 @@
     <string name="new_story_number_of_images">%d장의 사진</string>
     <string name="new_story_hint_title">제목을 입력해주세요</string>
     <string name="new_story_hint_memo">메모를 입력해주세요</string>
+    <string name="title_activity_edit_story">제목</string>
+    <string name="action_edit">편집</string>
 </resources>
