@@ -28,7 +28,6 @@ script:
     ./gradlew clean assemble --stacktrace
 
 jdk:
-    - oraclejdk7
     - oraclejdk8
 
 branches:
