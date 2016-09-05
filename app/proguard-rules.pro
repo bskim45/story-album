@@ -15,3 +15,6 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# gradle-retrolambda
+-dontwarn java.lang.invoke.*
