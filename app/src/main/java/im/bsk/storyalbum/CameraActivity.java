@@ -1,9 +1,11 @@
 package im.bsk.storyalbum;
 
+import android.Manifest;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,7 +29,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import im.bsk.storyalbum.widget.CameraPreview;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
+
+@RuntimePermissions
 @SuppressWarnings("deprecation")
 public class CameraActivity extends AppCompatActivity {
 
@@ -39,6 +49,7 @@ public class CameraActivity extends AppCompatActivity {
     private Camera mCamera;
     private int mMaxZoomLevel;
     private List<File> mTakenFiles = new ArrayList<>();
+    private CameraPreview mPreview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +57,7 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
 
-        initCamera();
+        CameraActivityPermissionsDispatcher.initCameraWithCheck(this);
     }
 
     @Override
@@ -63,11 +74,20 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-    private void initCamera() {
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        releaseCameraAndPreview();
+    }
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    void initCamera() {
         if (safeCameraOpen()) {
-            mPreviewFrame.addView(new CameraPreview(this, mCamera));
+            mPreview = new CameraPreview(this, mCamera);
+            mPreviewFrame.addView(mPreview);
         } else {
-            Toast.makeText(this, "카메라를 불러오지 못했습니다", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_camera_load, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -200,19 +220,52 @@ public class CameraActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setTitle("Really Exit?")
-                .setMessage("Are you sure you want to exit?")
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                    cleanTempFiles();
-                    CameraActivity.super.onBackPressed();
-                }).show();
+        if(mTakenFiles.size() > 0) {
+            new AlertDialog.Builder(this)
+                    .setTitle("아직 저장되지 않은 사진이 있습니다")
+                    .setMessage("정말 나가지겠습니까? 저장되지 않은 사진은 삭제됩니다.")
+                    .setNegativeButton(android.R.string.no, null)
+                    .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                        cleanTempFiles();
+                        CameraActivity.super.onBackPressed();
+                    }).show();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void cleanTempFiles() {
         for (File takenFile : mTakenFiles) {
             takenFile.delete();
         }
+    }
+
+    // handle runtime permissions
+    @OnShowRationale(Manifest.permission.CAMERA)
+    void showRationaleForCamera(PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_camera_rationale)
+                .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> request.proceed())
+                .setNegativeButton(android.R.string.no, (dialogInterface, i) -> request.cancel())
+                .show();
+    }
+
+    @OnPermissionDenied(Manifest.permission.CAMERA)
+    void showDeniedForCamera() {
+        Toast.makeText(this, R.string.permission_camera_denied, Toast.LENGTH_SHORT).show();
+    }
+
+    @OnNeverAskAgain(Manifest.permission.CAMERA)
+    void showNeverAskForCamera() {
+        Toast.makeText(this, R.string.permission_camera_neverask, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        CameraActivityPermissionsDispatcher
+                .onRequestPermissionsResult(this, requestCode, grantResults);
     }
 }

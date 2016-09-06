@@ -12,4 +12,8 @@
     <string name="new_story_hint_memo">메모를 입력해주세요</string>
     <string name="title_activity_edit_story">제목</string>
     <string name="action_edit">편집</string>
+    <string name="permission_camera_rationale">사진을 찍기 위해서는 카메라 권한이 필요합니다. 권한을 승인하시겠습니까?</string>
+    <string name="permission_camera_denied">카메라 사용 권한을 거절했습니다.</string>
+    <string name="permission_camera_neverask">더이상 카메라 권한을 요청하지 않습니다.</string>
+    <string name="error_camera_load">카메라를 불러오지 못했습니다</string>
 </resources>

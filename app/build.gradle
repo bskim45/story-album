@@ -86,7 +86,7 @@ dependencies {
 
     compile 'com.github.hotchemi:permissionsdispatcher:2.1.3'
     apt 'com.github.hotchemi:permissionsdispatcher-processor:2.1.3'
-    
+
     compile "com.mikepenz:materialize:1.0.0@aar"
     compile 'com.google.guava:guava:19.0'
 }
