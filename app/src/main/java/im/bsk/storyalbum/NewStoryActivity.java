@@ -1,5 +1,6 @@
 package im.bsk.storyalbum;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.collect.Collections2;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
@@ -26,8 +28,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NewStoryActivity extends AppCompatActivity {
-
-    public static final String EXTRA_PHOTOS = "im.bsk.storyalbum.PHOTOS";
 
     @BindView(R.id.new_story_photo_number)
     TextView mTvPhotos;
@@ -50,7 +50,7 @@ public class NewStoryActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ArrayList<String> files = getIntent().getStringArrayListExtra(EXTRA_PHOTOS);
+        ArrayList<String> files = getIntent().getStringArrayListExtra(Constants.EXTRA_PHOTOS);
 
         if (files == null) {
             Toast.makeText(this, "사진을 가져오는 데 문제가 발생했습니다.", Toast.LENGTH_SHORT).show();
@@ -64,6 +64,14 @@ public class NewStoryActivity extends AppCompatActivity {
 
         mAdapter = new FastItemAdapter<>();
         mAdapter.withOnClickListener((v, adapter, item, position) -> {
+            ArrayList<String> paths = new ArrayList<>(Collections2.transform(
+                    mAdapter.getAdapterItems(), i -> i.file.getPath()));
+
+            Intent i = new Intent(this, GalleryActivity.class);
+            i.putExtra(Constants.EXTRA_PHOTOS, paths);
+            i.putExtra(Constants.EXTRA_PHOTO_SELECT, position);
+
+            startActivity(i);
             return true;
         });
 
@@ -101,7 +109,7 @@ public class NewStoryActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                onBackPressed();
                 return true;
 
             case R.id.action_confirm:

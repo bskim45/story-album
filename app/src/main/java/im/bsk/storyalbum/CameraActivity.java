@@ -216,7 +216,7 @@ public class CameraActivity extends AppCompatActivity {
         ArrayList<String> files = new ArrayList<>(Collections2.transform(mTakenFiles, File::getPath));
 
         Intent i = new Intent(this, NewStoryActivity.class);
-        i.putExtra(NewStoryActivity.EXTRA_PHOTOS, files);
+        i.putExtra(Constants.EXTRA_PHOTOS, files);
 
         startActivity(i);
     }
