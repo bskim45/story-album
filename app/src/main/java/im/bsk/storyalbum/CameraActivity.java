@@ -83,10 +83,7 @@ public class CameraActivity extends AppCompatActivity {
 
     @NeedsPermission(Manifest.permission.CAMERA)
     void initCamera() {
-        if (safeCameraOpen()) {
-            mPreview = new CameraPreview(this, mCamera);
-            mPreviewFrame.addView(mPreview);
-        } else {
+        if (!safeCameraOpen()) {
             Toast.makeText(this, R.string.error_camera_load, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -102,14 +99,17 @@ public class CameraActivity extends AppCompatActivity {
         if (params.getSupportedFocusModes().contains(
                 Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-            mCamera.setParameters(params);
         } else if (params.getSupportedFocusModes().contains(
                 Camera.Parameters.FOCUS_MODE_AUTO)) {
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-            mCamera.setParameters(params);
         }
 
+        mCamera.setParameters(params);
+
         mCamera.enableShutterSound(true);
+
+        mPreview = new CameraPreview(this, mCamera);
+        mPreviewFrame.addView(mPreview);
     }
 
     private boolean safeCameraOpen() {
@@ -124,8 +124,16 @@ public class CameraActivity extends AppCompatActivity {
                 return false;
             }
             mCamera = Camera.open(id);
-            mCamera.setDisplayOrientation(CameraUtil.getRelativeOrientation(id,
-                    getWindowManager().getDefaultDisplay().getRotation()));
+
+            // handle orientation
+            int orientation = CameraUtil.getRelativeOrientation(id,
+                    getWindowManager().getDefaultDisplay().getRotation());
+            mCamera.setDisplayOrientation(orientation);
+
+            Camera.Parameters params = mCamera.getParameters();
+            params.setRotation(orientation);
+            mCamera.setParameters(params);
+
             result = (mCamera != null);
         } catch (Exception e) {
             Log.e(getClass().getName(), "Open camera error", e);
@@ -222,8 +230,8 @@ public class CameraActivity extends AppCompatActivity {
     public void onBackPressed() {
         if(mTakenFiles.size() > 0) {
             new AlertDialog.Builder(this)
-                    .setTitle("아직 저장되지 않은 사진이 있습니다")
-                    .setMessage("정말 나가지겠습니까? 저장되지 않은 사진은 삭제됩니다.")
+                    .setTitle(R.string.dialog_title_unsaved)
+                    .setMessage(R.string.dialog_message_unsaved)
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                         cleanTempFiles();
