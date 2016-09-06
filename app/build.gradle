@@ -85,4 +85,5 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
     compile "com.mikepenz:materialize:1.0.0@aar"
+    compile 'com.google.guava:guava:19.0'
 }
