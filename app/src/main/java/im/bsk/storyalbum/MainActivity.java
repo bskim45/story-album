@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_add:
                 // TODO: launch camera
-                startActivity(new Intent(this, NewStoryActivity.class));
+                startActivity(new Intent(this, CameraActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);

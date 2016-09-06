@@ -31,10 +31,14 @@
             android:name=".EditStoryActivity"
             android:label="@string/title_activity_edit_story"
             android:parentActivityName=".MainActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
+        </activity>
+        <activity android:name=".CameraActivity"
+            android:theme="@style/MaterialTheme.Light.TranslucentStatus">
         </activity>
     </application>
 
