@@ -1,4 +1,4 @@
-package im.bsk.storyalbum;
+package im.bsk.storyalbum.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
@@ -14,6 +14,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
+
+import im.bsk.storyalbum.BuildConfig;
 
 public class ImagePagerAdapter extends RecyclePagerAdapter<ImagePagerAdapter.ViewHolder> {
 
