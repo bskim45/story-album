@@ -18,9 +18,12 @@
         app:queryHint="@string/search_query_hint"/>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/main_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/main_searchview"
+        android:orientation="vertical"
         android:scrollbars="vertical"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:listitem="@layout/item_list_main"/>
 </RelativeLayout>

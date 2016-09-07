@@ -2,9 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="im.bsk.storyalbum">
 
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-feature android:name="android.hardware.camera"/>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".StoryApplication"
@@ -42,8 +44,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
-        <activity android:name=".CameraActivity"
+        <activity
+            android:name=".CameraActivity"
             android:theme="@style/MaterialTheme.Light.TranslucentStatus">
+        </activity>
+        <activity android:name=".GalleryActivity"
+            android:theme="@style/MaterialTheme.Light.DarkToolbar.TranslucentStatus">
         </activity>
     </application>
 
